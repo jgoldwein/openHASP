@@ -41,6 +41,7 @@
  *      DEFINES
  *********************/
 #define PAGE_START_INDEX 1 // Page number of array index 0
+#define MOTION_PIN 1	// JWG
 
 /**********************
  *      TYPEDEFS
@@ -76,6 +77,9 @@ bool hasp_first_touch_state     = false;          // Track first touch state
 static uint16_t sleepTimeShort  = 60;             // 1 second resolution
 static uint16_t sleepTimeLong   = 120;            // 1 second resolution
 static uint32_t sleepTimeOffset = 0;              // 1 second resolution
+static volatile bool motion_detected = false;	// JWG
+static uint32_t last_motion_ms = 0;		// JWG
+
 
 uint8_t haspStartDim       = HASP_START_DIM;
 uint8_t haspStartPage      = HASP_START_PAGE;
@@ -94,6 +98,13 @@ lv_obj_t* kb;
 static lv_font_t* haspFonts[12] = {nullptr};
 uint8_t current_page            = 1;
 
+// JWG
+void IRAM_ATTR motion_isr()
+{
+	    motion_detected = true;
+}
+
+
 /**
  * Get Font ID
  */
@@ -111,6 +122,17 @@ lv_font_t* hasp_get_font(uint8_t fontid)
  */
 HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
 {
+    if(motion_detected) {
+        motion_detected = false;
+
+        uint32_t now = millis();
+        if(now - last_motion_ms > 500) {
+            last_motion_ms = now;
+            lv_disp_trig_activity(NULL);
+            sleepTimeOffset = 0;
+	    hasp_sleep_state = HASP_SLEEP_OFF;
+        }
+    }
     // Don't fast exit, see issue #839
     // if(hasp_first_touch_state) return; // don't update sleep when first touch is still active
 
@@ -631,7 +653,12 @@ IRAM_ATTR void haspLoop(void)
 // Replaces all pages with new ones
 void hasp_init(void)
 {
-    haspPages.init(haspStartPage); // StartPage is used for the BACK action
+#if defined(ARDUINO)
+     pinMode(MOTION_PIN, INPUT_PULLUP);
+     attachInterrupt(digitalPinToInterrupt(MOTION_PIN), motion_isr, FALLING);
+#endif
+
+     haspPages.init(haspStartPage); // StartPage is used for the BACK action
 }
 
 void hasp_load_json(void)
