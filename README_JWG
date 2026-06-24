@@ -1,0 +1,126 @@
+#!/bin/bash
+#
+#  For openHASP ESP32-S3 based devices
+# 
+
+read -p 'Device ID: ' -i 'HARC1P0' -e devid
+read -p 'IP of device: 10.1.1.' -i '54' -e devip
+read -p 'Node name: plate' -i '22' -e nodename
+read -p 'MQTT Server IP address (32/182): 10.1.1.' -i '32' -e mqttserverip
+NAME="$devid-plate$nodename-$devip"
+#
+echo "creating user_config_overide.h file from template"
+cat include/user_config_override-template.tpl | sed -e "s/%DEVIP%/${devip}/g" | sed -e "s/%DEVID%/${devid}/g" |  sed -e "s/%nodename%/${nodename}/g" |sed -e "s/%mqttserverip%/${mqttserverip}/g"  > include/user_config_override.h
+# FILENAME must be same as base file version in platformio_override.ini
+# 
+FILENAME="seeed_xiao_esp32s3"
+#
+echo "Upgrading platformio"
+platformio upgrade
+echo "erasing existing firmware files in build_output/firmware directory"
+#echo ' To downgrade pio -  pip install -U "platformio<6.1.7"'
+#echo " "
+#sleep 2
+# pip install -U "platformio<6.1.7"
+rm -f build_output/firmware/*
+#
+#  git describe --exact-match --tags $(git log -n1 --pretty='%h')
+echo " "
+echo "Creating openHASP build called $NAME.bin"
+echo " "
+sleep 5
+git pull
+#sleep 5
+pio run -t clean
+pio run -e $FILENAME 2>&1 | tee build.log 
+# 2>&1 | tee build.log
+echo "copying $NAME.bin to web server"
+# gzip -k -f build_output/firmware/$FILENAME.bin 
+sudo cp -f build_output/firmware/*ota*.bin  /var/www/html/tasmota/$NAME.bin
+sudo cp -f build.log /var/www/html/tasmota/.
+# sleep 2
+echo "copying $NAME-full.bin to web server"
+sudo cp -f build_output/firmware/*full*.bin /var/www/html/tasmota/$NAME-full.bin
+sleep 2
+echo "changing ownership of web server files"
+sudo chown www-data:www-data /var/www/html/tasmota/*
+sleep 2
+echo " "
+ls -lrt /var/www/html/tasmota/$NAME*
+echo " "
+ls -lrt build_output/firmware/*
+echo " "
+echo " "
+echo " "
+echo " "
+echo " "
+echo "======================="
+echo "$NAME.bin"
+echo "======================="
+echo " "
+echo "       http://tasmota.goldwein.net/$NAME.bin"
+echo " "
+echo "       http://tasmota.goldwein.net/$NAME-full.bin"
+echo " "
+# sleep 10
+echo "TO START FRESH: pio run -t clean"
+echo " "
+sleep 3
+echo 'git commit -m "platformio addition of core32solo1 section so build errors are avoided"'
+echo "git stash"
+echo "git pull"
+echo "git stash pop"
+echo " "
+echo "PRIOR TO FIRST PROGRAMMING, BURN using command below" 
+echo "EDIT include/lv_conf_v7.h for fonts"
+echo " "
+echo "DONT FORGET git clone --recursive https://github.com/HASwitchPlate/openHASP or git submodule update --init --recursive"
+echo " "
+echo " "
+echo '"C:\Users\goldw\AppData\Local\Arduino15\packages\esp32\tools\esptool_py\4.5.1/esptool.exe" --chip esp32 --port "COM7" --baud 115200  --before default_reset --after hard_reset write_flash -e -z --flash_mode dio --flash_freq 40m 0x0 "C:\Users\goldw\OneDrive\Desktop\tasmota\'$NAME'-full.bin"'
+echo " "
+echo 'moodlight {"state":"on","r":255,"g":255,"b":255}'
+
+echo " "
+echo "MAKE SURE YOU REPLACE THE /user_setups/esp32/_esp32.ini with:"
+echo "  platform = https://github.com/tasmota/platform-espressif32/releases/download/2023.05.02/platform-espressif32.zip"
+echo " "
+echo .
+echo .
+echo "; ===============================
+;
+;    JWG: Settings for HARC1P0
+;    Label      GPIO   ILI9341
+;    =======   =====  ========
+;    TS_CS     = 44   CS2-10  Touch Screen Chip x2046 select
+;    TFT_CS    = 05   CS1-09  TFT Display Screen Select
+;    MISO      = 08      -08
+;    MOSI      = 09      -04
+;    TFT_LED   = 04      -07
+;    DC        = 43      -06
+;    RST       = 06      -05
+;    CLK       = 07      -03
+;
+; Set ARDUINO_USB_CDC_ON_BOOT = 0
+;
+; ==============================
+"
+#cat build.log | grep "* TFT_"
+#cat build.log | grep "* TOUCH"
+grep -E "\* (TFT_|TOUCH)" build.log
+cat build.log | grep "   * " | grep CDC
+echo "=================================================================================================================="
+echo .
+echo "    Replace the appropriate settings in the json file if necessary"
+echo "goldwein@mythbackend ~/tasmota/openHASP $ find ~/.platformio/platforms -name "*xiao*esp32s3*.json"
+cat /home/goldwein/.platformio/platforms/espressif32@src-01bf99fb7da4409b45440b435cd131bf/boards/seeed_xiao_esp32s3.json | grep CDC
+cat /home/goldwein/.platformio/platforms/espressif32@src-10b9a3fbf2a0e9fcc84ac7d9ba4c0f64/boards/seeed_xiao_esp32s3.json  | grep CDC 
+cat /home/goldwein/.platformio/platforms/espressif32@src-ed6253a981534192587ecc94bad969da/boards/seeed_xiao_esp32s3.json | grep CDC
+cat /home/goldwein/.platformio/platforms/espressif32/boards/seeed_xiao_esp32s3.json  | grep CDC
+cat /home/goldwein/.platformio/platforms/espressif32@src-3c83a6a7658bc92fa6c813b5fb6e76a1/boards/seeed_xiao_esp32s3.json  | grep CDC
+cat /home/goldwein/.platformio/platforms/espressif32@src-2d473a5a42679e3a1a0b68541468d05f/boards/seeed_xiao_esp32s3.json | grep CDC
+cat /home/goldwein/.platformio/platforms/espressif32@src-2787678c7409ddf684afd69d10aa4d55/boards/seeed_xiao_esp32s3.json | grep CDC
+"
+echo "================================================================================================================="
+#read -p 'Press ENTER to show git file change...' 
+#cat ./README_DIFF

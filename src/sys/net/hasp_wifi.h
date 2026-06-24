@@ -31,15 +31,23 @@ bool wifiSetConfig(const JsonObject& settings);
 #endif
 
 #ifndef WIFI_SSID
-#define WIFI_SSID ""
+  #define WIFI_SSID ""
 #endif
 
 #ifndef WIFI_PASSWORD
-#ifndef WIFI_PASSW
-#define WIFI_PASSWORD ""
-#else
-#define WIFI_PASSWORD WIFI_PASSW
-#endif
+ #ifndef WIFI_PASSW
+  #define WIFI_PASSWORD ""
+ #else
+  #define WIFI_PASSWORD WIFI_PASSW
+ #endif
 #endif
 
+#ifndef WIFI_SSID2
+#define WIFI_SSID2 ""
 #endif
+
+#ifndef WIFI_PASSWORD2
+#define WIFI_PASSWORD2 ""
+#endif
+
+#endif // HASP_WIFI_H

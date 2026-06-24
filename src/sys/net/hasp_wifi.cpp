@@ -44,6 +44,11 @@ char wifiPassword[MAX_PASSPHRASE_LEN] = WIFI_PASSWORD;
 char wifiIpAddress[16]                = "";
 bool wifiEnabled                      = true;
 extern uint16_t network_reconnect_counter;
+// JWG: Secondary WiFi Network Globals
+char wifiSsid2[MAX_SSID_LEN]           = WIFI_SSID2;
+char wifiPassword2[MAX_PASSPHRASE_LEN] = WIFI_PASSWORD2;
+static bool wifiTrySecondary           = false;
+
 
 // const byte DNS_PORT = 53;
 // DNSServer dnsServer;
@@ -423,7 +428,6 @@ static void wifiReconnect(void)
     WiFi.setSleepMode(WIFI_NONE_SLEEP);
     WiFi.begin(wifiSsid, wifiPassword);
     WiFi.hostname(haspDevice.get_hostname());
-
 #elif defined(ARDUINO_ARCH_ESP32)
     // https://github.com/espressif/arduino-esp32/issues/3438#issuecomment-721428310
     WiFi.persistent(false);
@@ -445,7 +449,16 @@ static void wifiReconnect(void)
         WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
 
     WiFi.mode(WIFI_STA);
-    WiFi.begin(wifiSsid, wifiPassword);
+    if(wifiTrySecondary && strlen(wifiSsid2) > 0) {
+         LOG_WARNING(TAG_WIFI, F("Trying secondary WiFi: %s"), wifiSsid2);
+         WiFi.begin(wifiSsid2, wifiPassword2);
+         wifiTrySecondary = false;
+    } else {
+         LOG_WARNING(TAG_WIFI, F("Trying primary WiFi: %s"), wifiSsid);
+         WiFi.begin(wifiSsid, wifiPassword);
+         wifiTrySecondary = true;
+    }
+
 #endif
 }
 
