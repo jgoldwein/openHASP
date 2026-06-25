@@ -17,10 +17,10 @@
 /***************************************************
           WiFi Settings
  **************************************************/
-//#define WIFI_SSID "" // tsunami2"
-//#define WIFI_PASSWORD "" //clineng1155"
-//#define WIFI_SSID2 "" // "FREEWiFi-DCPL"
-//#define WIFI_PASSWORD2 ""
+#define WIFI_SSID "Randolph812" // tsunami2"
+#define WIFI_PASSWORD "Petworth812" //clineng1155"
+#define WIFI_SSID2 "JWGS26U" // "FREEWiFi-DCPL"
+#define WIFI_PASSWORD2 "clineng1155"
 //#define WIFI_SSID "" // "Get Cafe"
 //#define WIFI_PASSWORD "getincluded1"
 /***************************************************

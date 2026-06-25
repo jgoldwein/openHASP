@@ -42,7 +42,9 @@
  *********************/
 #define PAGE_START_INDEX 1 // Page number of array index 0
 #define MOTION_PIN 1	// JWG
-
+#define JWG_BRIGHT_ACTIVE 255
+#define JWG_BRIGHT_SHORT 50
+#define JWG_BRIGHT_LONG 5
 /**********************
  *      TYPEDEFS
  **********************/
@@ -128,9 +130,18 @@ HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
         uint32_t now = millis();
         if(now - last_motion_ms > 500) {
             last_motion_ms = now;
+
+            LOG_INFO(TAG_HASP, F("JWG motion detected"));
+
+            haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
             lv_disp_trig_activity(NULL);
             sleepTimeOffset = 0;
-	    hasp_sleep_state = HASP_SLEEP_OFF;
+            
+            if(hasp_sleep_state != HASP_SLEEP_OFF) {
+                gui_hide_pointer(false);
+    		hasp_sleep_state = HASP_SLEEP_OFF;
+                dispatch_idle_state(HASP_SLEEP_OFF);
+            }
         }
     }
     // Don't fast exit, see issue #839
@@ -139,27 +150,28 @@ HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
     uint32_t idle = lv_disp_get_inactive_time(lv_disp_get_default()) / 1000;
     idle += sleepTimeOffset; // To force a specific state
 
+
     if(sleepTimeLong > 0 && idle >= (sleepTimeShort + sleepTimeLong)) {
-        if(hasp_sleep_state != HASP_SLEEP_LONG) {
-            gui_hide_pointer(true);
-            hasp_sleep_state = HASP_SLEEP_LONG;
-            dispatch_idle_state(HASP_SLEEP_LONG);
-            dispatch_run_script(NULL, "L:/idle_long.cmd", TAG_HASP);
-        }
+       if(hasp_sleep_state != HASP_SLEEP_LONG) {
+           gui_hide_pointer(true);
+           haspDevice.set_backlight_level(JWG_BRIGHT_LONG);
+           hasp_sleep_state = HASP_SLEEP_LONG;
+           dispatch_idle_state(HASP_SLEEP_LONG);
+       }
     } else if(sleepTimeShort > 0 && idle >= sleepTimeShort) {
-        if(hasp_sleep_state != HASP_SLEEP_SHORT) {
-            gui_hide_pointer(true);
-            hasp_sleep_state = HASP_SLEEP_SHORT;
-            dispatch_idle_state(HASP_SLEEP_SHORT);
-            dispatch_run_script(NULL, "L:/idle_short.cmd", TAG_HASP);
-        }
+       if(hasp_sleep_state != HASP_SLEEP_SHORT) {
+           gui_hide_pointer(true);
+           haspDevice.set_backlight_level(JWG_BRIGHT_SHORT);
+           hasp_sleep_state = HASP_SLEEP_SHORT;
+           dispatch_idle_state(HASP_SLEEP_SHORT);
+       }
     } else {
-        if(hasp_sleep_state != HASP_SLEEP_OFF) {
-            gui_hide_pointer(false);
-            hasp_sleep_state = HASP_SLEEP_OFF;
-            dispatch_idle_state(HASP_SLEEP_OFF);
-            dispatch_run_script(NULL, "L:/idle_off.cmd", TAG_HASP);
-        }
+       if(hasp_sleep_state != HASP_SLEEP_OFF) {
+           gui_hide_pointer(false);
+           haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
+           hasp_sleep_state = HASP_SLEEP_OFF;
+           dispatch_idle_state(HASP_SLEEP_OFF);
+       }
     }
 }
 

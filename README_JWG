@@ -7,6 +7,11 @@ read -p 'Device ID: ' -i 'HARC1P0' -e devid
 read -p 'IP of device: 10.1.1.' -i '54' -e devip
 read -p 'Node name: plate' -i '22' -e nodename
 read -p 'MQTT Server IP address (32/182): 10.1.1.' -i '32' -e mqttserverip
+read -p 'SSID 1: ' -i 'tsunami2' -e ssid1
+read -p 'Password 1: ' -i 'clineng1155' -e pass1
+read -p 'SSID 2: ' -i 'JWGS26U' -e ssid2
+read -p 'Password 2: ' -i 'clineng1155' -e pass2
+
 NAME="$devid-plate$nodename-$devip"
 #
 echo "creating user_config_overide.h file from template"
