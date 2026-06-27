@@ -208,7 +208,15 @@ IRAM_ATTR void loop()
     statLoopCounter++; // measures the average looptime
 #endif
 
-    /* Timer Loop */
+    /* Timer Loops */
+
+    /*JWG  Fast motion / sleep state timer */
+    static uint32_t mainLast100msTime = 0;
+    if(millis() - mainLast100msTime >= 100) {
+        mainLast100msTime = millis();
+        haspEvery100ms();
+    }
+
     if(millis() - mainLastLoopTime >= 1000) {
         mainLastLoopTime = millis();
 

@@ -15,7 +15,7 @@ read -p 'Password 2: ' -i 'clineng1155' -e pass2
 NAME="$devid-plate$nodename-$devip"
 #
 echo "creating user_config_overide.h file from template"
-cat include/user_config_override-template.tpl | sed -e "s/%DEVIP%/${devip}/g" | sed -e "s/%DEVID%/${devid}/g" |  sed -e "s/%nodename%/${nodename}/g" |sed -e "s/%mqttserverip%/${mqttserverip}/g"  > include/user_config_override.h
+cat include/user_config_override-template.tpl | sed -e "s/%DEVIP%/${devip}/g" | sed -e "s/%DEVID%/${devid}/g" |  sed -e "s/%nodename%/${nodename}/g" |sed -e "s/%mqttserverip%/${mqttserverip}/g"  | sed -e "s/%pass1%/${pass1}/g"  | sed -e "s/%pass2%/${pass2}/g" | sed -e "s/%ssid1%/${ssid1}/g"  | sed -e "s/%ssid2%/${ssid2}/g" > include/user_config_override.h
 # FILENAME must be same as base file version in platformio_override.ini
 # 
 FILENAME="seeed_xiao_esp32s3"

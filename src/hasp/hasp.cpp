@@ -43,8 +43,8 @@
 #define PAGE_START_INDEX 1 // Page number of array index 0
 #define MOTION_PIN 1	// JWG
 #define JWG_BRIGHT_ACTIVE 255
-#define JWG_BRIGHT_SHORT 50
-#define JWG_BRIGHT_LONG 5
+#define JWG_BRIGHT_SHORT 40
+#define JWG_BRIGHT_LONG 0
 /**********************
  *      TYPEDEFS
  **********************/
@@ -80,7 +80,6 @@ static uint16_t sleepTimeShort  = 60;             // 1 second resolution
 static uint16_t sleepTimeLong   = 120;            // 1 second resolution
 static uint32_t sleepTimeOffset = 0;              // 1 second resolution
 static volatile bool motion_detected = false;	// JWG
-static uint32_t last_motion_ms = 0;		// JWG
 
 
 uint8_t haspStartDim       = HASP_START_DIM;
@@ -103,7 +102,7 @@ uint8_t current_page            = 1;
 // JWG
 void IRAM_ATTR motion_isr()
 {
-	    motion_detected = true;
+    motion_detected = true;
 }
 
 
@@ -124,28 +123,25 @@ lv_font_t* hasp_get_font(uint8_t fontid)
  */
 HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
 {
+
+
     if(motion_detected) {
         motion_detected = false;
 
-        uint32_t now = millis();
-        if(now - last_motion_ms > 500) {
-            last_motion_ms = now;
+        LOG_INFO(TAG_HASP, F("JWG motion detected in hasp sleep state"));
 
-            LOG_INFO(TAG_HASP, F("JWG motion detected"));
+        haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
+        lv_disp_trig_activity(NULL);
+        sleepTimeOffset = 0;
 
-            haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
-            lv_disp_trig_activity(NULL);
-            sleepTimeOffset = 0;
-            
-            if(hasp_sleep_state != HASP_SLEEP_OFF) {
-                gui_hide_pointer(false);
-    		hasp_sleep_state = HASP_SLEEP_OFF;
-                dispatch_idle_state(HASP_SLEEP_OFF);
-            }
-        }
-    }
-    // Don't fast exit, see issue #839
-    // if(hasp_first_touch_state) return; // don't update sleep when first touch is still active
+        if(hasp_sleep_state != HASP_SLEEP_OFF) {
+	   gui_hide_pointer(false);
+	   hasp_sleep_state = HASP_SLEEP_OFF;
+	   dispatch_idle_state(HASP_SLEEP_OFF);
+	}
+    }	
+
+
 
     uint32_t idle = lv_disp_get_inactive_time(lv_disp_get_default()) / 1000;
     idle += sleepTimeOffset; // To force a specific state
@@ -154,21 +150,27 @@ HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
     if(sleepTimeLong > 0 && idle >= (sleepTimeShort + sleepTimeLong)) {
        if(hasp_sleep_state != HASP_SLEEP_LONG) {
            gui_hide_pointer(true);
-           haspDevice.set_backlight_level(JWG_BRIGHT_LONG);
-           hasp_sleep_state = HASP_SLEEP_LONG;
+           LOG_INFO(TAG_HASP, F("JWG motion setting backlight BRIGHT LONG"));
+	   haspDevice.set_backlight_level(JWG_BRIGHT_LONG);
+           LOG_INFO(TAG_HASP, F("JWG motion set backlight BRIGHT LONG"));
+	   hasp_sleep_state = HASP_SLEEP_LONG;
            dispatch_idle_state(HASP_SLEEP_LONG);
        }
     } else if(sleepTimeShort > 0 && idle >= sleepTimeShort) {
        if(hasp_sleep_state != HASP_SLEEP_SHORT) {
            gui_hide_pointer(true);
+	   LOG_INFO(TAG_HASP, F("JWG motion seting backlight BRIGHT SHORT"));
            haspDevice.set_backlight_level(JWG_BRIGHT_SHORT);
+	   LOG_INFO(TAG_HASP, F("JWG motion set backlight BRIGHT SHORT"));
            hasp_sleep_state = HASP_SLEEP_SHORT;
            dispatch_idle_state(HASP_SLEEP_SHORT);
        }
     } else {
        if(hasp_sleep_state != HASP_SLEEP_OFF) {
            gui_hide_pointer(false);
+	   LOG_INFO(TAG_HASP, F("JWG motion setting backlight BRIGHT ACTIVE"));
            haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
+	   LOG_INFO(TAG_HASP, F("JWG motion set backlight BRIGHT ACTIVE"));
            hasp_sleep_state = HASP_SLEEP_OFF;
            dispatch_idle_state(HASP_SLEEP_OFF);
        }
@@ -391,10 +393,13 @@ void hasp_set_sleep_time(uint16_t short_time, uint16_t long_time)
  */
 void haspEverySecond()
 {
-    hasp_update_sleep_state();
+//    hasp_update_sleep_state();
     dispatchEverySecond();
 }
-
+// JWG
+void haspEvery100ms() {
+    hasp_update_sleep_state();
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void haspDisconnect()
@@ -657,17 +662,19 @@ void haspSetup(void)
  *   STATIC FUNCTIONS
  **********************/
 
+
 IRAM_ATTR void haspLoop(void)
 {
     dispatchLoop();
 }
+
 
 // Replaces all pages with new ones
 void hasp_init(void)
 {
 #if defined(ARDUINO)
      pinMode(MOTION_PIN, INPUT_PULLUP);
-     attachInterrupt(digitalPinToInterrupt(MOTION_PIN), motion_isr, FALLING);
+     attachInterrupt(digitalPinToInterrupt(MOTION_PIN), motion_isr, CHANGE);
 #endif
 
      haspPages.init(haspStartPage); // StartPage is used for the BACK action

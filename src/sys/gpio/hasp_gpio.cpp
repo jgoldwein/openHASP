@@ -1005,6 +1005,7 @@ bool gpioGetConfig(const JsonObject& settings)
     return changed;
 }
 
+
 /** Set GPIO Configuration.
  *
  * Read the settings from json and sets the application variables.
@@ -1013,6 +1014,7 @@ bool gpioGetConfig(const JsonObject& settings)
  *
  * @param[in] settings    JsonObject with the config settings.
  **/
+
 bool gpioSetConfig(const JsonObject& settings)
 {
     configOutput(settings, TAG_GPIO);
@@ -1044,4 +1046,7 @@ bool gpioSetConfig(const JsonObject& settings)
 
     return changed;
 }
+
+
+
 #endif // HASP_USE_CONFIG

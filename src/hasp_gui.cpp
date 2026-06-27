@@ -54,7 +54,8 @@ gui_conf_t gui_settings = {.show_pointer   = false,
                            .backlight_pin  = TFT_BCKL,
                            .rotation       = TFT_ROTATION,
                            .invert_display = INVERT_COLORS,
-                           .cal_data       = {0, 65535, 0, 65535, 0}};
+			   .cal_data       = {607, 2726, 415, 3341, 0}};
+// JWG                           .cal_data       = {0, 65535, 0, 65535, 0}};
 lv_obj_t* cursor;
 
 uint16_t tft_width  = TFT_WIDTH;
