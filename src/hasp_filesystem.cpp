@@ -12,7 +12,8 @@
 #if HASP_USE_SPIFFS > 0 || HASP_USE_LITTLEFS > 0
 
 #ifndef HASP_ONLINE_CMD
-#define HASP_ONLINE_CMD "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"text\":\"%ip%\",\"auto_close\":20000}"
+// #define HASP_ONLINE_CMD "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"text\":\"%ip%\",\"auto_close\":20000}"
+#define HASP_ONLINE_CMD "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"text\":\"Connected\\n%ssid%\\n%ip%\",\"auto_close\":20000}"
 #endif
 
 #ifndef HASP_OFFLINE_CMD

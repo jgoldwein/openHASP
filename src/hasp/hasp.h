@@ -59,6 +59,7 @@ extern "C" {
 void haspSetup(void);
 IRAM_ATTR void haspLoop(void);
 void haspEverySecond(void);
+void haspEvery100ms(void);
 
 void haspReconnect(void);
 void haspDisconnect(void);
