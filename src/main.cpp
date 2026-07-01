@@ -16,6 +16,7 @@
 #include "sys/net/hasp_network.h"
 #include "sys/net/hasp_time.h"
 #include "dev/device.h"
+#include "jwg_wifi_led.h"
 
 #if HASP_USE_CONFIG > 0
 #include "hasp_debug.h"
@@ -164,6 +165,9 @@ void setup()
 
 IRAM_ATTR void loop()
 {
+//  JWG
+    jwg_wifi_led_loop();
+
 #if defined(ESP32) && defined(HASP_USE_ESP_MQTT)
     if(!gui_acquire(portMAX_DELAY)) {
         // LOG_ERROR(TAG_MAIN, F("TAKE Mutex"));

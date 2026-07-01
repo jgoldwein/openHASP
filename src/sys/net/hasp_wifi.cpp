@@ -17,6 +17,9 @@
 #include "hasp/hasp_dispatch.h"
 #include "hasp/hasp.h"
 
+// JWG
+#include "jwg_wifi_led.h"
+
 #if defined(ARDUINO_ARCH_ESP32)
 #ifndef ESP_ARDUINO_VERSION_VAL
 #define ESP_ARDUINO_VERSION_VAL(major, minor, patch) ((major << 16) | (minor << 8) | (patch))
@@ -336,6 +339,7 @@ static void wifi_callback(WiFiEvent_t event, WiFiEventInfo_t info)
                                             // break;
         case SYSTEM_EVENT_STA_LOST_IP:      /*!< ESP32 station lost IP and the IP is reset to 0 */
         case SYSTEM_EVENT_STA_DISCONNECTED: /*!< ESP32 station disconnected from AP */
+	    jwg_wifi_led_disconnected();
 #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(2, 0, 0)
             wifiDisconnected((const char*)info.wifi_sta_disconnected.ssid, info.wifi_sta_disconnected.reason);
 #else
@@ -345,7 +349,8 @@ static void wifi_callback(WiFiEvent_t event, WiFiEventInfo_t info)
             break;
 
         case SYSTEM_EVENT_STA_GOT_IP: /*!< ESP32 station got IP from connected AP */
-            wifiConnected(IPAddress(info.got_ip.ip_info.ip.addr));
+            jwg_wifi_led_connected();
+	    wifiConnected(IPAddress(info.got_ip.ip_info.ip.addr));
             break;
 
         case SYSTEM_EVENT_SCAN_DONE: { /*!< ESP32 finish scanning AP */
