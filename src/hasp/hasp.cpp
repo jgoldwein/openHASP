@@ -7,6 +7,10 @@
 // #include "lv_datetime.h"
 #include "hasp_gui.h"
 
+
+#include "jwg_wifi_led.h"
+
+
 #ifdef ARDUINO
 #include "ArduinoLog.h"
 #endif
@@ -76,8 +80,8 @@ LV_IMG_DECLARE(img_bubble_pattern)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 uint8_t hasp_sleep_state        = HASP_SLEEP_OFF; // Used in hasp_drv_touch.cpp
 bool hasp_first_touch_state     = false;          // Track first touch state
-static uint16_t sleepTimeShort  = 60;             // 1 second resolution
-static uint16_t sleepTimeLong   = 120;            // 1 second resolution
+static uint16_t sleepTimeShort  = 10;             // 1 second resolution
+static uint16_t sleepTimeLong   = 40;            // 1 second resolution
 static uint32_t sleepTimeOffset = 0;              // 1 second resolution
 static volatile bool motion_detected = false;	// JWG
 
@@ -599,6 +603,8 @@ void haspSetup(void)
 {
     haspDevice.set_backlight_level(haspStartDim);
 
+    // JWG
+    jwg_wifi_led_init();
     /******* File System Test ********************************************************************/
     // lv_fs_file_t f;
     // lv_fs_res_t res;
@@ -665,6 +671,7 @@ void haspSetup(void)
 
 IRAM_ATTR void haspLoop(void)
 {
+    jwg_wifi_led_loop();
     dispatchLoop();
 }
 
