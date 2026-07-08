@@ -13,6 +13,9 @@
 // Fast Boot
 #define JWG_FAST_BOOT			1
 
+// Firmware Update Settings
+#define JWG_WAKE_DISPLAY_DURING_OTA 	1
+
 // Motion / Power
 #define JWG_MOTION_PIN                  1
 

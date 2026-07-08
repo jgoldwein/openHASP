@@ -2,6 +2,7 @@
    For full license information read the LICENSE file in the project folder */
 
 #include "hasplib.h"
+#include "jwg_features.h"
 
 #if HASP_USE_HTTP > 0
 
@@ -1059,7 +1060,13 @@ static void webHandleFirmwareUpload()
 
         case UPLOAD_FILE_START: {
             if(!http_is_authenticated("update")) return;
-
+	    // JWG - Wake Up Screen to full brightness
+            #if JWG_WAKE_DISPLAY_DURING_OTA
+	    haspDevice.set_backlight_power(true);
+	    haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
+	    hasp_set_sleep_state(HASP_SLEEP_OFF);
+	    lv_disp_trig_activity(NULL);
+            #endif
             // WiFiUDP::stopAll();
 
             int command = webServer.arg("cmd").toInt();
