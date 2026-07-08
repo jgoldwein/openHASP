@@ -40,9 +40,9 @@ void TftEspi::show_info()
     {
         LOG_VERBOSE(TAG_TFT, F("Driver     : %s"), haspTft.get_tft_model()); // tftSetup.tft_driver);
         LOG_VERBOSE(TAG_TFT, F("Resolution : %ix%i"), tftSetup.tft_width, tftSetup.tft_height);
-    } else if(tftSetup.tft_driver == 0xE9D)
+    } else { 
         LOG_VERBOSE(TAG_TFT, F("Driver = ePaper"));
-
+    }
     // Offsets, not all used yet
     tftOffsetInfo(0, tftSetup.r0_x_offset, tftSetup.r0_y_offset);
     tftOffsetInfo(1, tftSetup.r1_x_offset, tftSetup.r1_y_offset);
@@ -155,86 +155,87 @@ void IRAM_ATTR TftEspi::flush_pixels(lv_disp_drv_t* disp, const lv_area_t* area,
 
 bool TftEspi::is_driver_pin(uint8_t pin)
 {
+    int16_t signed_pin = pin;
     if(false // start condition is always needed
 
 // Use individual checks instead of switch statement, as some case labels could be duplicated
 #ifdef TOUCH_CS
-       || (pin == TOUCH_CS)
+       || (signed_pin == TOUCH_CS)
 #endif
 #ifdef TFT_MOSI
-       || (pin == TFT_MOSI)
+       || (signed_pin == TFT_MOSI)
 #endif
 #ifdef TFT_MISO
-       || (pin == TFT_MISO)
+       || (signed_pin == TFT_MISO)
 #endif
 #ifdef TFT_SCLK
-       || (pin == TFT_SCLK)
+       || (signed_pin == TFT_SCLK)
 #endif
 #ifdef TFT_CS
-       || (pin == TFT_CS)
+       || (signed_pin == TFT_CS)
 #endif
 #ifdef TFT_DC
-       || (pin == TFT_DC)
+       || (signed_pin == TFT_DC)
 #endif
 #ifdef TFT_BL
-       || (pin == TFT_BL)
+       || (signed_pin == TFT_BL)
 #endif
 #ifdef TFT_RST
-       || (pin == TFT_RST)
+       || (signed_pin == TFT_RST)
 #endif
 #ifdef TFT_WR
-       || (pin == TFT_WR)
+       || (signed_pin == TFT_WR)
 #endif
 #ifdef TFT_RD
-       || (pin == TFT_RD)
+       || (signed_pin == TFT_RD)
 #endif
 #ifdef TFT_D0
-       || (pin == TFT_D0)
+       || (signed_pin == TFT_D0)
 #endif
 #ifdef TFT_D1
-       || (pin == TFT_D1)
+       || (signed_pin == TFT_D1)
 #endif
 #ifdef TFT_D2
-       || (pin == TFT_D2)
+       || (signed_pin == TFT_D2)
 #endif
 #ifdef TFT_D3
-       || (pin == TFT_D3)
+       || (signed_pin == TFT_D3)
 #endif
 #ifdef TFT_D4
-       || (pin == TFT_D4)
+       || (signed_pin == TFT_D4)
 #endif
 #ifdef TFT_D5
-       || (pin == TFT_D5)
+       || (signed_pin == TFT_D5)
 #endif
 #ifdef TFT_D6
-       || (pin == TFT_D6)
+       || (signed_pin == TFT_D6)
 #endif
 #ifdef TFT_D7
-       || (pin == TFT_D7)
+       || (signed_pin == TFT_D7)
 #endif
 #ifdef TFT_D8
-       || (pin == TFT_D8)
+       || (signed_pin == TFT_D8)
 #endif
 #ifdef TFT_D9
-       || (pin == TFT_D9)
+       || (signed_pin == TFT_D9)
 #endif
 #ifdef TFT_D10
-       || (pin == TFT_D10)
+       || (signed_pin == TFT_D10)
 #endif
 #ifdef TFT_D11
-       || (pin == TFT_D11)
+       || (signed_pin == TFT_D11)
 #endif
 #ifdef TFT_D12
-       || (pin == TFT_D12)
+       || (signed_pin == TFT_D12)
 #endif
 #ifdef TFT_D13
-       || (pin == TFT_D13)
+       || (signed_pin == TFT_D13)
 #endif
 #ifdef TFT_D14
-       || (pin == TFT_D14)
+       || (signed_pin == TFT_D14)
 #endif
 #ifdef TFT_D15
-       || (pin == TFT_D15)
+       || (signed_pin == TFT_D15)
 #endif
     ) {
         return true;

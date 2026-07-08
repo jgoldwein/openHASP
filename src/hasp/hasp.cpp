@@ -550,20 +550,20 @@ void haspProgressMsg(const __FlashStringHelper* msg)
 #endif
 
 /*Add a custom apply callback*/
-static void custom_font_apply_cb(lv_theme_t* th, lv_obj_t* obj, lv_theme_style_t name)
-{
-    /*    lv_style_list_t* list;
-
-        switch(name) {
-            case LV_THEME_BTN:
-                list = lv_obj_get_style_list(obj, LV_BTN_PART_MAIN);
-                // _lv_style_list_add_style(list, &my_style);
-                break;
-            default:
-                // nothing
-                ;
-        } */
-}
+//static void custom_font_apply_cb(lv_theme_t* th, lv_obj_t* obj, lv_theme_style_t name)
+//{
+//    /*    lv_style_list_t* list;
+//
+//        switch(name) {
+//            case LV_THEME_BTN:
+//                list = lv_obj_get_style_list(obj, LV_BTN_PART_MAIN);
+//                // _lv_style_list_add_style(list, &my_style);
+//                break;
+//            default:
+//                // nothing
+//                ;
+//        } */
+//}
 
 void hasp_set_theme(uint8_t themeid)
 {
@@ -572,8 +572,8 @@ void hasp_set_theme(uint8_t themeid)
     /* ********** Theme Initializations ********** */
     if(themeid == 8) themeid = 1;          // update old HASP id
     if(themeid == 9) themeid = 5;          // update old material id
-    if(themeid < 0 || themeid > 5) return; // check bounds
-
+    // if(themeid < 0 || themeid > 5) return; // check bounds
+    if(themeid > 5) return; // check bounds
 #if(LV_USE_THEME_HASP == 1)
     uint32_t hasp_flags = LV_THEME_HASP_FLAG_LIGHT + LV_THEME_HASP_FLAG_NO_TRANSITION + LV_THEME_HASP_FLAG_NO_FOCUS;
 #endif
@@ -597,6 +597,7 @@ void hasp_set_theme(uint8_t themeid)
 #if(LV_USE_THEME_HASP == 1)
         case 2: // Dark
             hasp_flags = LV_THEME_HASP_FLAG_DARK + LV_THEME_HASP_FLAG_NO_TRANSITION + LV_THEME_HASP_FLAG_NO_FOCUS;
+	    [[fallthrough]];
         case 1: // Light
         case 8: // Light (old id)
             th = lv_theme_hasp_init(color_primary, color_secondary, hasp_flags, haspFonts[0], haspFonts[1],
@@ -615,7 +616,8 @@ void hasp_set_theme(uint8_t themeid)
         case 5: // Dark
             material_flags =
                 LV_THEME_MATERIAL_FLAG_DARK + LV_THEME_MATERIAL_FLAG_NO_TRANSITION + LV_THEME_MATERIAL_FLAG_NO_FOCUS;
-        case 4: // Light
+            [[fallthrough]];
+	case 4: // Light
         case 9: // Light (old id)
             th = lv_theme_material_init(color_primary, color_secondary, material_flags, haspFonts[0], haspFonts[1],
                                         haspFonts[2], haspFonts[3]);
@@ -945,7 +947,8 @@ bool haspGetConfig(const JsonObject& settings)
 bool haspSetConfig(const JsonObject& settings)
 {
     configOutput(settings, TAG_HASP);
-    lv_color32_t c;
+    // JWG - unused variable c error
+    // lv_color32_t c;
     JsonVariant color_str;
     bool changed = false;
 
