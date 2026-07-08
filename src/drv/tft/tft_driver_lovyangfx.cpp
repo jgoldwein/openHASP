@@ -6,6 +6,8 @@
 #include <Preferences.h>
 #include <sdkconfig.h>
 
+#include "jwg_features.h"
+
 #include "LovyanGFX.hpp"
 // #if defined(ESP32S3)
 #include "lgfx/v1/platforms/esp32s3/Panel_RGB.hpp"
@@ -1163,7 +1165,10 @@ void LovyanGfx::init(int w, int h)
 
 void LovyanGfx::show_info()
 {
+
+#if !JWG_FAST_BOOT
     splashscreen();
+#endif
 
     LOG_VERBOSE(TAG_TFT, F("LovyanGFX   : v%d.%d.%d"), LGFX_VERSION_MAJOR, LGFX_VERSION_MINOR, LGFX_VERSION_PATCH);
     auto panel = tft.getPanel();
@@ -1274,7 +1279,7 @@ void LovyanGfx::splashscreen()
     int x = (tft.width() - logoWidth) / 2;
     int y = (tft.height() - logoHeight) / 2;
     tft.drawXBitmap(x, y, logoImage, logoWidth, logoHeight, fgColor.full);
-    // tft.fillSmoothRoundRect(x, y, logoWidth, logoWidth, 15, fgColor.full);
+    //tft.fillSmoothRoundRect(x, y, logoWidth, logoWidth, 15, fgColor.full);
 }
 
 void LovyanGfx::set_rotation(uint8_t rotation)

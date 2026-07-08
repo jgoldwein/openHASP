@@ -11,9 +11,18 @@
 
 #if HASP_USE_SPIFFS > 0 || HASP_USE_LITTLEFS > 0
 
+#include "jwg_features.h"
+
 #ifndef HASP_ONLINE_CMD
-// #define HASP_ONLINE_CMD "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"text\":\"%ip%\",\"auto_close\":20000}"
-#define HASP_ONLINE_CMD "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"text\":\"Connected\\n%ssid%\\n%ip%\",\"auto_close\":20000}"
+
+#if JWG_DEFAULT_ONLINE_MESSAGE
+  #define HASP_ONLINE_CMD \
+    "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"font\":28,\"text\":\"%hostname% connected:\\n%ip%\\n%ssid%\",\"auto_close\":8000}"
+#else
+  #define HASP_ONLINE_CMD \
+    "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"text\":\"%ip%\",\"auto_close\":20000}"
+#endif
+
 #endif
 
 #ifndef HASP_OFFLINE_CMD

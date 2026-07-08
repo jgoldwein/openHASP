@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "ArduinoJson.h"
 #include "ArduinoLog.h"
+#include "jwg_features.h"
 
 #include "hasp_conf.h"
 
@@ -454,7 +455,28 @@ static void wifiReconnect(void)
         WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
 
     WiFi.mode(WIFI_STA);
+    #if JWG_WIFI_PREFER_PRIMARY_ON_BOOT
+    if(!wifiTrySecondary || strlen(wifiSsid2) == 0) {
+	        LOG_WARNING(TAG_WIFI, F("Trying primary WiFi: %s"), wifiSsid);
+		    WiFi.begin(wifiSsid, wifiPassword);
+		        wifiTrySecondary = true;
+    } else {
+	        LOG_WARNING(TAG_WIFI, F("Trying secondary WiFi: %s"), wifiSsid2);
+		    WiFi.begin(wifiSsid2, wifiPassword2);
+		        wifiTrySecondary = false;
+    }
+#else
     if(wifiTrySecondary && strlen(wifiSsid2) > 0) {
+	        LOG_WARNING(TAG_WIFI, F("Trying secondary WiFi: %s"), wifiSsid2);
+		    WiFi.begin(wifiSsid2, wifiPassword2);
+		        wifiTrySecondary = false;
+    } else {
+	        LOG_WARNING(TAG_WIFI, F("Trying primary WiFi: %s"), wifiSsid);
+		    WiFi.begin(wifiSsid, wifiPassword);
+		        wifiTrySecondary = true;
+    }
+#endif
+    /*  if(wifiTrySecondary && strlen(wifiSsid2) > 0) {
          LOG_WARNING(TAG_WIFI, F("Trying secondary WiFi: %s"), wifiSsid2);
          WiFi.begin(wifiSsid2, wifiPassword2);
          wifiTrySecondary = false;
@@ -463,7 +485,7 @@ static void wifiReconnect(void)
          WiFi.begin(wifiSsid, wifiPassword);
          wifiTrySecondary = true;
     }
-
+   */
 #endif
 }
 
@@ -554,7 +576,7 @@ bool wifiEvery5Seconds()
 	}
 
 	if(WiFi.status() != WL_CONNECTED) {		// If WiFi disconnected...
-		if(++disconnectionPeriod >= 6) { 	// If 30 seconds have passed since the disconnection...
+		if(++disconnectionPeriod >= 2) { 	// If 30 seconds have passed since the disconnection...
 			disconnectionPeriod = 0;	    // Restart timeout period
 			wifiReconnect();		        // Reconnect to WiFi
 		}
@@ -565,7 +587,7 @@ bool wifiEvery5Seconds()
 bool wifiValidateSsid(const char* ssid, const char* pass)
 {
 #ifdef ARDUINO_ARCH_ESP32
-    WiFi.begin(ssid, pass, WIFI_ALL_CHANNEL_SCAN);
+    WiFi.begin(ssid, pass, WIFI_FAST_SCAN);
 #else
     WiFi.begin(ssid, pass);
 #endif

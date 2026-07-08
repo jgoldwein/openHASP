@@ -2,7 +2,7 @@
    For full license information read the LICENSE file in the project folder */
 
 #include "hasplib.h"
-
+#include "jwg_features.h"
 #include "lv_drv_conf.h"
 #include "lv_fs_if.h"
 
@@ -54,8 +54,14 @@ gui_conf_t gui_settings = {.show_pointer   = false,
                            .backlight_pin  = TFT_BCKL,
                            .rotation       = TFT_ROTATION,
                            .invert_display = INVERT_COLORS,
-			   .cal_data       = {607, 2726, 415, 3341, 0}};
-// JWG                           .cal_data       = {0, 65535, 0, 65535, 0}};
+
+#if JWG_DEFAULT_TOUCH_CALIBRATION
+                           .cal_data       = {JWG_TOUCH_CAL_X_MIN, JWG_TOUCH_CAL_X_MAX,
+                                              JWG_TOUCH_CAL_Y_MIN, JWG_TOUCH_CAL_Y_MAX,
+	                                      JWG_TOUCH_CAL_ROT}};
+#else
+                           .cal_data       = {0, 65535, 0, 65535, 0}};
+#endif
 lv_obj_t* cursor;
 
 uint16_t tft_width  = TFT_WIDTH;

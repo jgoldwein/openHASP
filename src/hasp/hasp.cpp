@@ -6,13 +6,16 @@
 #include "drv/tft/tft_driver.h"
 // #include "lv_datetime.h"
 #include "hasp_gui.h"
-
-
+#include "jwg_features.h"
 #include "jwg_wifi_led.h"
-
+#include "driver/gpio.h"
 
 #ifdef ARDUINO
 #include "ArduinoLog.h"
+#endif
+
+#if defined(ARDUINO_ARCH_ESP32)
+#include "esp_sleep.h"
 #endif
 
 #if HASP_TARGET_PC
@@ -45,10 +48,8 @@
  *      DEFINES
  *********************/
 #define PAGE_START_INDEX 1 // Page number of array index 0
-#define MOTION_PIN 1	// JWG
-#define JWG_BRIGHT_ACTIVE 255
-#define JWG_BRIGHT_SHORT 40
-#define JWG_BRIGHT_LONG 0
+#define MOTION_PIN JWG_MOTION_PIN	// JWG
+
 /**********************
  *      TYPEDEFS
  **********************/
@@ -69,6 +70,11 @@
 LV_IMG_DECLARE(img_bubble_pattern)
 #endif
 
+#if defined(ARDUINO_ARCH_ESP32)
+static void jwg_enter_deep_sleep();
+#endif
+
+
 /**********************
  *      MACROS
  **********************/
@@ -80,11 +86,12 @@ LV_IMG_DECLARE(img_bubble_pattern)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 uint8_t hasp_sleep_state        = HASP_SLEEP_OFF; // Used in hasp_drv_touch.cpp
 bool hasp_first_touch_state     = false;          // Track first touch state
-static uint16_t sleepTimeShort  = 10;             // 1 second resolution
-static uint16_t sleepTimeLong   = 40;            // 1 second resolution
+static uint16_t sleepTimeShort  = JWG_IDLE_SHORT_SEC;             // 1 second resolution
+static uint16_t sleepTimeLong   = JWG_IDLE_LONG_SEC;             // 1 second resolution
 static uint32_t sleepTimeOffset = 0;              // 1 second resolution
-static volatile bool motion_detected = false;	// JWG
-
+#if JWG_MOTION_SENSOR
+static volatile bool motion_detected = false;   // JWG
+#endif
 
 uint8_t haspStartDim       = HASP_START_DIM;
 uint8_t haspStartPage      = HASP_START_PAGE;
@@ -104,11 +111,12 @@ static lv_font_t* haspFonts[12] = {nullptr};
 uint8_t current_page            = 1;
 
 // JWG
+#if JWG_MOTION_SENSOR
 void IRAM_ATTR motion_isr()
 {
     motion_detected = true;
 }
-
+#endif
 
 /**
  * Get Font ID
@@ -128,13 +136,16 @@ lv_font_t* hasp_get_font(uint8_t fontid)
 HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
 {
 
+#if JWG_MOTION_SENSOR
 
     if(motion_detected) {
         motion_detected = false;
 
+#if JWG_EXTRA_LOGGING
         LOG_INFO(TAG_HASP, F("JWG motion detected in hasp sleep state"));
+#endif
 
-        haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
+	haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
         lv_disp_trig_activity(NULL);
         sleepTimeOffset = 0;
 
@@ -144,8 +155,7 @@ HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
 	   dispatch_idle_state(HASP_SLEEP_OFF);
 	}
     }	
-
-
+#endif
 
     uint32_t idle = lv_disp_get_inactive_time(lv_disp_get_default()) / 1000;
     idle += sleepTimeOffset; // To force a specific state
@@ -179,7 +189,43 @@ HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
            dispatch_idle_state(HASP_SLEEP_OFF);
        }
     }
+
+#if defined(ARDUINO_ARCH_ESP32) && JWG_DEEP_SLEEP_MODE
+    if(idle >= JWG_DEEP_SLEEP_AFTER_SEC) {
+       jwg_enter_deep_sleep();
+    }
+#endif 
 }
+
+#if defined(ARDUINO_ARCH_ESP32)
+
+static void jwg_enter_deep_sleep()
+{
+    LOG_INFO(TAG_HASP, F("JWG entering deep sleep"));
+
+    haspDevice.set_backlight_level(0);
+    haspDevice.set_backlight_power(false);
+    // JWG: force TFT backlight OFF before deep sleep
+    pinMode(4, OUTPUT);
+    digitalWrite(4, LOW);
+
+    #if defined(ARDUINO_ARCH_ESP32)
+    gpio_hold_en((gpio_num_t)4);
+    gpio_deep_sleep_hold_en();
+    #endif
+
+
+    delay(250);
+    pinMode(MOTION_PIN, INPUT_PULLUP);
+
+    // Wake when GPIO1 is pulled LOW by the motion switch
+    esp_sleep_enable_ext0_wakeup((gpio_num_t)MOTION_PIN, 0);
+	
+    esp_deep_sleep_start();
+}
+
+#endif
+
 
 void hasp_set_sleep_offset(uint32_t offset)
 {
@@ -679,6 +725,12 @@ IRAM_ATTR void haspLoop(void)
 // Replaces all pages with new ones
 void hasp_init(void)
 {
+
+#if defined(ARDUINO_ARCH_ESP32)
+    gpio_deep_sleep_hold_dis();
+    gpio_hold_dis((gpio_num_t)4);
+#endif
+
 #if defined(ARDUINO)
      pinMode(MOTION_PIN, INPUT_PULLUP);
      attachInterrupt(digitalPinToInterrupt(MOTION_PIN), motion_isr, CHANGE);

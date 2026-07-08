@@ -3,6 +3,7 @@
 
 #if defined(ARDUINO) && defined(USER_SETUP_LOADED)
 #include "tft_driver_tftespi.h"
+#include "jwg_features.h"
 
 namespace dev {
 
@@ -21,8 +22,9 @@ void TftEspi::init(int w, int h)
 
 void TftEspi::show_info()
 {
+#if !JWG_FAST_BOOT
     splashscreen();
-
+#endif
     setup_t tftSetup;
     tft.getSetup(tftSetup);
 
