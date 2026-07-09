@@ -3,6 +3,8 @@
 
 #include "hasplib.h"
 
+#define HASP_IS_DEFAULT_TEMPLATE(t) ((const char*)(t) == (const char*)D_TIMESTAMP) 
+
 lv_task_t* my_obj_get_task(const lv_obj_t* obj)
 {
     lv_task_t* task = lv_task_get_next(NULL);
@@ -46,7 +48,8 @@ void my_obj_del_task(const lv_obj_t* obj)
 
     hasp_task_user_data_t* data = (hasp_task_user_data_t*)task->user_data;
     if(data) {
-        if(data->templ != D_TIMESTAMP) hasp_free(data->templ);
+     if(!HASP_IS_DEFAULT_TEMPLATE(data->templ)) hasp_free(data->templ);
+     //JWG: if(data->templ != D_TIMESTAMP) hasp_free(data->templ);
         lv_mem_free(data);
     }
     lv_task_del(task);
@@ -69,7 +72,8 @@ void my_obj_set_template(lv_obj_t* obj, const char* text)
     }
 
     hasp_task_user_data_t* data = (hasp_task_user_data_t*)task->user_data;
-    if(data->templ != D_TIMESTAMP) hasp_free(data->templ);
+    if(!HASP_IS_DEFAULT_TEMPLATE(data->templ)) hasp_free(data->templ);
+    //JWG: if(data->templ != D_TIMESTAMP) hasp_free(data->templ);
     data->templ = NULL;
     if(!text) return;
 

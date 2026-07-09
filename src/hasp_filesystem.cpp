@@ -17,7 +17,7 @@
 
 #if JWG_DEFAULT_ONLINE_MESSAGE
   #define HASP_ONLINE_CMD \
-    "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"font\":28,\"text\":\"%hostname% connected:\\n%ip%\\n%ssid%\",\"auto_close\":8000}"
+    "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"font\":28,\"text\":\"%hostname% connected:\\n%ip%\\n%ssid%\",\"opa_scale\":200,\"auto_close\":500}"
 #else
   #define HASP_ONLINE_CMD \
     "jsonl {\"page\":0,\"id\":239,\"obj\":\"msgbox\",\"text\":\"%ip%\",\"auto_close\":20000}"

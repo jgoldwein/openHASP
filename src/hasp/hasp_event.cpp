@@ -172,7 +172,8 @@ void event_timer_clock(lv_task_t* task)
 
     if(!data || !data->obj || !lv_debug_check_obj_valid(data->obj)) {
         if(data) {
-            if(data->templ != D_TIMESTAMP) hasp_free(data->templ);
+            // JWG: if(data->templ != D_TIMESTAMP) hasp_free(data->templ);
+	    if((const char*)data->templ != (const char*)D_TIMESTAMP) hasp_free(data->templ);
             lv_mem_free(data); // the object that the user_data points to is gone}
         }
         lv_task_del(task); // the calendar object for this task was deleted

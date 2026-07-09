@@ -9,7 +9,7 @@
 #include "mqtt_client.h"
 #include "esp_crt_bundle.h"
 #include "Preferences.h"
-
+#include "jwg_features.h" 
 #include "hasp/hasp.h"
 #include "hasp_mqtt.h"
 #include "hasp_mqtt_ha.h"
@@ -92,7 +92,9 @@ static inline void mqtt_run_scripts()
         // };
 
         if(current_mqtt_state) {
+	    #if !JWG_FAST_BOOT
             dispatch_run_script(NULL, "L:/mqtt_on.cmd", TAG_HASP);
+            #endif
         } else {
             dispatch_run_script(NULL, "L:/mqtt_off.cmd", TAG_HASP);
         }

@@ -250,7 +250,7 @@ static lv_font_t* haspPayloadToFont(const char* payload)
     if(Parser::is_only_digits(payload)) {
         uint8_t var = atoi(payload);
 
-        if(var >= 0 && var < 8)
+        if(var < 8)
             return hasp_get_font(var);
         else if(var == 8)
             return &unscii_8_icon;

@@ -48,7 +48,7 @@
  *      DEFINES
  *********************/
 #define PAGE_START_INDEX 1 // Page number of array index 0
-#define MOTION_PIN JWG_MOTION_PIN	// JWG
+// #define MOTION_PIN JWG_MOTION_PIN	// JWG - Already defined in jwg_features.h as gpio1
 
 /**********************
  *      TYPEDEFS
@@ -201,14 +201,27 @@ HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
 
 static void jwg_enter_deep_sleep()
 {
-    LOG_INFO(TAG_HASP, F("JWG entering deep sleep"));
-
+    LOG_INFO(TAG_HASP, F("JWG entering deep sleep process"));
     haspDevice.set_backlight_level(0);
+    LOG_INFO(TAG_HASP, F("Backlight Level 0"));
+    #if JWG_2_8_INCH_TFT_DISPLAY
+    //haspDevice.set_backlight_level(0);
+    //LOG_INFO(TAG_HASP, F("Backlight Level 0"));
+    //delay(500);
+    haspDevice.set_backlight_power(true);
+    LOG_INFO(TAG_HASP, F("JWG Backlight Power True for 2.8 inch TFT display"));
+    delay(500);
+    #else
+    // haspDevice.set_backlight_level(0);
     haspDevice.set_backlight_power(false);
+    LOG_INFO(TAG_HASP, F("JWG Backlight Power False for 2.4 inch TFT display"));
+    delay(500);
+    #endif
     // JWG: force TFT backlight OFF before deep sleep
     pinMode(4, OUTPUT);
     digitalWrite(4, LOW);
-
+    LOG_INFO(TAG_HASP, F("JWG Digital Write GPIO4 LOW and now go to deep sleep"));
+    delay(500);
     #if defined(ARDUINO_ARCH_ESP32)
     gpio_hold_en((gpio_num_t)4);
     gpio_deep_sleep_hold_en();
@@ -216,11 +229,18 @@ static void jwg_enter_deep_sleep()
 
 
     delay(250);
-    pinMode(MOTION_PIN, INPUT_PULLUP);
+    pinMode(JWG_MOTION_PIN, INPUT_PULLUP);
 
     // Wake when GPIO1 is pulled LOW by the motion switch
-    esp_sleep_enable_ext0_wakeup((gpio_num_t)MOTION_PIN, 0);
-	
+    // esp_sleep_enable_ext0_wakeup((gpio_num_t)JWG_MOTION_PIN, 0);
+    int motion_state = digitalRead(JWG_MOTION_PIN);
+    // Wake when GPIO1 changes from its current state (the state when it went to sleep)
+    int wake_level = (motion_state == HIGH) ? LOW : HIGH;
+
+    // Wake when GPIO1 changes from its current state
+    esp_sleep_enable_ext0_wakeup((gpio_num_t)JWG_MOTION_PIN, wake_level);
+
+
     esp_deep_sleep_start();
 }
 
@@ -734,8 +754,8 @@ void hasp_init(void)
 #endif
 
 #if defined(ARDUINO)
-     pinMode(MOTION_PIN, INPUT_PULLUP);
-     attachInterrupt(digitalPinToInterrupt(MOTION_PIN), motion_isr, CHANGE);
+     pinMode(JWG_MOTION_PIN, INPUT_PULLUP);
+     attachInterrupt(digitalPinToInterrupt(JWG_MOTION_PIN), motion_isr, CHANGE);
 #endif
 
      haspPages.init(haspStartPage); // StartPage is used for the BACK action

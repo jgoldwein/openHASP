@@ -40,6 +40,7 @@
 
 // Display
 #define JWG_DEFAULT_TOUCH_CALIBRATION	1
+#define JWG_2_8_INCH_TFT_DISPLAY	1 // Screen Power inversion flag for 2.8 inch TFT screen (see hasp.cpp)
 ////////////////////////////////////////////
 // Subject to later change
 #define JWG_CUSTOM_ONLINE_MSG        	1
