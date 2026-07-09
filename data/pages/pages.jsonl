@@ -191,7 +191,10 @@
 {"id":43,"obj":"btn","x":130,"y":215,"w":90,"h":45,"text":"Away+","toggle":true,"radius":8,"bg_color":"#3A3F46","bg_color10":"#27AE60","text_color":"#FFFFFF"}
 
 {"page":12,"comment":"---------- Page 12 - Settings ----------"}
-{"id":1,"obj":"label","x":45,"y":50,"w":150,"h":200,"text":"%ssid%\n%ip%\n%hostname%\n%model%\n%version%"}
+
+{"id":1,"obj":"label","x":80,"y":50,"w":150,"h":200,"text":"%ssid%\n%ip%\n%hostname%\n%model%\n%version%"}
+{"id":2,"obj":"btn","x":80,"y":190,"w":80,"h":40,"text":"Restart","action":{"down":"reboot"}}
+{"id":3,"obj":"btn","x":80,"y":240,"w":80,"h":40,"text":"Calibrate","action":{"down":"calibrate"}}
 
 {"comment":"---------- Limit page prev/next between 1 and 8 ----------"}
 {"page":1,"id":0,"prev":12}
