@@ -17,12 +17,10 @@
 /***************************************************
           WiFi Settings
  **************************************************/
-#define WIFI_SSID "%ssid1%" // tsunami2"
-#define WIFI_PASSWORD "%pass1%" //***REMOVED***"
-#define WIFI_SSID2 "%ssid2%" // "FREEWiFi-DCPL"
+#define WIFI_SSID "%ssid1%" 
+#define WIFI_PASSWORD "%pass1%" 
+#define WIFI_SSID2 "%ssid2%" 
 #define WIFI_PASSWORD2 "%pass2%"
-//#define WIFI_SSID "" // "Get Cafe"
-//#define WIFI_PASSWORD "getincluded1"
 /***************************************************
           Http Server Settings
  **************************************************/
@@ -164,5 +162,6 @@
 //#define HASP_USE_WIREGUARD 0			      // disable to prevent build error JWG 20260609
 #define HASP_USE_ETHERNET 0
 #define HASP_USE_ETHSPI 0
+#define HASP_START_PAGE %startpage%		      // user defined startpage JWG
 
 #endif // HASP_USER_CONFIG_OVERRIDE_H

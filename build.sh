@@ -6,16 +6,18 @@
 read -p 'Device ID: ' -i 'HARC1P0' -e devid
 read -p 'IP of device: 10.1.1.' -i '54' -e devip
 read -p 'Node name: plate' -i '22' -e nodename
+read -p 'Default start (home) page: ' -i '1' -e startpage
 read -p 'MQTT Server IP address (32/182): 10.1.1.' -i '32' -e mqttserverip
-read -p 'SSID 1: ' -i 'tsunami2' -e ssid1
-read -p 'Password 1: ' -i '***REMOVED***' -e pass1
-read -p 'SSID 2: ' -i 'JWGS26U' -e ssid2
-read -p 'Password 2: ' -i '***REMOVED***' -e pass2
+read -p 'SSID 1: ' -e ssid1
+read -p 'Password 1: ' -e pass1
+read -p 'SSID 2: ' -e ssid2
+read -p 'Password 2: ' -e pass2
 
 NAME="$devid-plate$nodename-$devip"
 #
 echo "creating user_config_overide.h file from template"
-cat include/user_config_override-template.tpl | sed -e "s/%DEVIP%/${devip}/g" | sed -e "s/%DEVID%/${devid}/g" |  sed -e "s/%nodename%/${nodename}/g" |sed -e "s/%mqttserverip%/${mqttserverip}/g"  | sed -e "s/%pass1%/${pass1}/g"  | sed -e "s/%pass2%/${pass2}/g" | sed -e "s/%ssid1%/${ssid1}/g"  | sed -e "s/%ssid2%/${ssid2}/g" > include/user_config_override.h
+cat include/user_config_override-template.tpl | sed -e "s/%DEVIP%/${devip}/g" | sed -e "s/%DEVID%/${devid}/g" |  sed -e "s/%nodename%/${nodename}/g" |sed -e "s/%mqttserverip%/${mqttserverip}/g"  | sed -e "s/%pass1%/${pass1}/g"  | sed -e "s/%pass2%/${pass2}/g" | sed -e "s/%ssid1%/${ssid1}/g"  | sed -e "s/%ssid2%/${ssid2}/g" | sed -e "s/%startpage%/${startpage}/g" > include/user_config_override.h
+
 # FILENAME must be same as base file version in platformio_override.ini
 # 
 FILENAME="seeed_xiao_esp32s3"
