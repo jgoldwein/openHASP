@@ -12,6 +12,7 @@
 
 // Fast Boot
 #define JWG_FAST_BOOT			1
+#define JWG_HIDE_BOOT_UNTIL_ONLINE      1
 
 // Firmware Update Settings
 #define JWG_WAKE_DISPLAY_DURING_OTA 	1

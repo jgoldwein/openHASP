@@ -669,8 +669,12 @@ void hasp_set_theme(uint8_t themeid)
  */
 void haspSetup(void)
 {
+#if JWG_HIDE_BOOT_UNTIL_ONLINE
+    haspDevice.set_backlight_level(0);
+    haspDevice.set_backlight_power(false);
+#else
     haspDevice.set_backlight_level(haspStartDim);
-
+#endif
     // JWG
     jwg_wifi_led_init();
     /******* File System Test ********************************************************************/

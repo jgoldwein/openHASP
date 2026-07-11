@@ -193,8 +193,9 @@
 {"page":12,"comment":"---------- Page 12 - Settings ----------"}
 
 {"id":1,"obj":"label","x":80,"y":50,"w":150,"h":200,"text":"%ssid%\n%ip%\n%hostname%\n%model%\n%version%"}
-{"id":2,"obj":"btn","x":80,"y":190,"w":80,"h":40,"text":"Restart","action":{"down":"reboot"}}
-{"id":3,"obj":"btn","x":80,"y":240,"w":80,"h":40,"text":"Calibrate","action":{"down":"calibrate"}}
+{"id":2,"obj":"btn","x":80,"y":170,"w":80,"h":30,"text":"Restart","action":{"down":"reboot"}}
+{"id":3,"obj":"btn","x":80,"y":205,"w":80,"h":30,"text":"Calibrate","action":{"down":"calibrate"}}
+{"id":4,"obj":"btn","x":80,"y":240,"w":80,"h":30,"text":"Factory Rst","action":{"down":"factoryreset"}}
 
 {"comment":"---------- Limit page prev/next between 1 and 8 ----------"}
 {"page":1,"id":0,"prev":12}

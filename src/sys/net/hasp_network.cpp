@@ -7,6 +7,9 @@
 #include "hasp_debug.h"
 #include "hasp_network.h"
 #include "sys/svc/hasp_mdns.h"
+#include "jwg_features.h"
+#include "dev/device.h"
+#include "hasp/hasp.h"
 
 bool last_network_state            = false;
 bool current_network_state         = false;
@@ -56,6 +59,12 @@ void network_run_scripts()
     if(last_network_state != current_network_state) {
         if(current_network_state) {
             dispatch_run_script(NULL, "L:/online.cmd", TAG_HASP);
+#if JWG_HIDE_BOOT_UNTIL_ONLINE
+            haspDevice.set_backlight_power(true);
+	    haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
+            hasp_set_sleep_state(HASP_SLEEP_OFF);
+	    lv_disp_trig_activity(NULL);
+#endif
             networkStart();
         } else {
             dispatch_run_script(NULL, "L:/offline.cmd", TAG_HASP);
