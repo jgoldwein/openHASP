@@ -47,7 +47,7 @@
 //#define HASP_USE_ARDUINOOTA 1                       // Enable the Arduino OTA service available via the arduino IDE
 //#define ARDUINOOTA_PORT 3232
 //#define ARDUINOOTA_PASSWORD ""
-#define OTA_URL "http://tasmota.goldwein.net/%DEVID%-plate%nodename%-%DEVIP%.bin"
+//#define OTA_URL 
 
 /***************************************************
  *        Syslog Settings
