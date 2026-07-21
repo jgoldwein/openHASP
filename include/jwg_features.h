@@ -64,6 +64,7 @@
 
 // Networking
 #define JWG_WIFI_FAILOVER            	1
+#define JWG_USE_STATIC_IP		1   // applies to src/sys/net/hasp_wifi.cpp
 
 // Debugging
 #define JWG_EXTRA_LOGGING            	1
