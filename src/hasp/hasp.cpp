@@ -8,6 +8,7 @@
 #include "hasp_gui.h"
 #include "jwg_features.h"
 #include "jwg_wifi_led.h"
+#include "jwg_haptic.h"
 #include "driver/gpio.h"
 
 #ifdef ARDUINO
@@ -677,6 +678,7 @@ void haspSetup(void)
 #endif
     // JWG
     jwg_wifi_led_init();
+    jwg_haptic_init();
     /******* File System Test ********************************************************************/
     // lv_fs_file_t f;
     // lv_fs_res_t res;
@@ -744,6 +746,7 @@ void haspSetup(void)
 IRAM_ATTR void haspLoop(void)
 {
     jwg_wifi_led_loop();
+    jwg_haptic_loop();
     dispatchLoop();
 }
 

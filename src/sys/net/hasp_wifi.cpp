@@ -440,7 +440,7 @@ static void wifiReconnect(void)
     WiFi.disconnect(true);
     WiFi.setHostname(haspDevice.get_hostname());
     WiFi.setSleep(false);
-
+/*
     IPAddress ip(INADDR_NONE);
     // IPAddress ip(192, 168, 0, 60);
     IPAddress net(INADDR_NONE);
@@ -453,6 +453,18 @@ static void wifiReconnect(void)
         WiFi.config(ip, gw, net, dns1, dns2);
     else
         WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
+*/
+    IPAddress ip(10, 1, 1, 184);
+    IPAddress net(255, 255, 255, 0);
+    IPAddress gw(10, 1, 1, 1);
+    IPAddress dns1(10, 1, 1, 1);
+    IPAddress dns2(1, 1, 1, 1);
+
+    if(!WiFi.config(ip, gw, net, dns1, dns2)) {
+        LOG_WARNING(TAG_WIFI, F("Static IP configuration failed"));
+    } else {
+        LOG_INFO(TAG_WIFI, F("Static IP configured: %s"), ip.toString().c_str());
+    }
 
     WiFi.mode(WIFI_STA);
     #if JWG_WIFI_PREFER_PRIMARY_ON_BOOT

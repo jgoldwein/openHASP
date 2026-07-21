@@ -7,8 +7,15 @@
 // -----------------------------------------------------------------------------
 #define JWG_FEATURE_VERSION            "1.0"
 //
+//
 // Hardware
 #define JWG_XIAO_ESP32S3             	1
+// Hardware - Haptic Feedback
+#define JWG_HAPTIC_FEEDBACK       	1
+#define JWG_HAPTIC_PIN            	3  	// GPIO3 
+#define JWG_HAPTIC_CLICK_MS       	15
+#define JWG_HAPTIC_LONG_MS              40
+#define JWG_HAPTIC_PAUSE_MS             50
 
 // Fast Boot
 #define JWG_FAST_BOOT			1
@@ -31,21 +38,21 @@
 #define JWG_BRIGHT_LONG                1
 
 // Idle Timers (seconds)
-#define JWG_IDLE_SHORT_SEC         10
-#define JWG_IDLE_LONG_SEC          30    // additional time after short (10 + 30 = 40 s)
+#define JWG_IDLE_SHORT_SEC         	10
+#define JWG_IDLE_LONG_SEC          	30    // additional time after short (10 + 30 = 40 s)
 
 
 // Deep Sleep
-#define JWG_DEEP_SLEEP_MODE          1
-#define JWG_DEEP_SLEEP_AFTER_SEC     120   // 10 minutes
+#define JWG_DEEP_SLEEP_MODE          	1
+#define JWG_DEEP_SLEEP_AFTER_SEC     	120   
 
 // Display
 #define JWG_DEFAULT_TOUCH_CALIBRATION	1
 #define JWG_2_8_INCH_TFT_DISPLAY	1 // Screen Power inversion flag for 2.8 inch TFT screen (see hasp.cpp)
-////////////////////////////////////////////
+////////////////////////////////////
 // Subject to later change
 #define JWG_CUSTOM_ONLINE_MSG        	1
-////////////////////////////////////////////
+////////////////////////////////////
 #define JWG_DEFAULT_BACKLIGHT        	1
 #define JWG_DEFAULT_ONLINE_MESSAGE 	1
 

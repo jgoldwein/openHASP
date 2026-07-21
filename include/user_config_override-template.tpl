@@ -32,8 +32,8 @@
  **************************************************/
 #define MQTT_HOSTNAME "10.1.1.%mqttserverip%"
 #define MQTT_PORT 1883
-#define MQTT_USERNAME "goldwein"
-#define MQTT_PASSWORD "***REMOVED***"
+#define MQTT_USERNAME "%mqttuser%"
+#define MQTT_PASSWORD "%mqttpass%"
 #define MQTT_PREFIX "hasp"
 #define MQTT_NODENAME "plate%nodename%"
 #define MQTT_GROUPNAME "plates"

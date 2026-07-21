@@ -58,13 +58,16 @@ void network_run_scripts()
 {
     if(last_network_state != current_network_state) {
         if(current_network_state) {
+	    #if !JWG_FAST_BOOT
             dispatch_run_script(NULL, "L:/online.cmd", TAG_HASP);
-#if JWG_HIDE_BOOT_UNTIL_ONLINE
+            #endif  
+
+            #if JWG_HIDE_BOOT_UNTIL_ONLINE
             haspDevice.set_backlight_power(true);
 	    haspDevice.set_backlight_level(JWG_BRIGHT_ACTIVE);
             hasp_set_sleep_state(HASP_SLEEP_OFF);
 	    lv_disp_trig_activity(NULL);
-#endif
+            #endif
             networkStart();
         } else {
             dispatch_run_script(NULL, "L:/offline.cmd", TAG_HASP);

@@ -12,6 +12,8 @@ read -p 'SSID 1: ' -e ssid1
 read -p 'Password 1: ' -e pass1
 read -p 'SSID 2: ' -e ssid2
 read -p 'Password 2: ' -e pass2
+read -p 'MQTT Username: ' -e mqttuser
+read -p 'MQTT Password: ' -e mqttpass
 
 NAME="$devid-plate$nodename-$devip"
 #
