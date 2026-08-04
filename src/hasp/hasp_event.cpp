@@ -29,6 +29,10 @@
 
 #include "lv_core/lv_obj.h" // for tabview ext
 
+
+#include "jwg_haptic.h"
+#include "jwg_features.h"
+
 static lv_style_int_t last_value_sent;
 static lv_obj_t* last_obj_sent = NULL;
 static lv_color_t last_color_sent;
@@ -242,7 +246,7 @@ static bool translate_event(lv_obj_t* obj, lv_event_t event, uint8_t& eventid)
             break;
 
         case LV_EVENT_PRESSED:
-            hasp_update_sleep_state(); // wakeup on press down?
+	    hasp_update_sleep_state(); // wakeup on press down?
             eventid = HASP_EVENT_DOWN;
             return true;
 
@@ -265,6 +269,7 @@ static bool translate_event(lv_obj_t* obj, lv_event_t event, uint8_t& eventid)
 
 // ##################### Value Senders ########################################################
 
+
 static void event_send_object_data(lv_obj_t* obj, const char* data)
 {
     uint8_t pageid;
@@ -272,6 +277,15 @@ static void event_send_object_data(lv_obj_t* obj, const char* data)
 
     if(hasp_find_id_from_obj(obj, &pageid, &objid)) {
         if(!data) return;
+
+#if JWG_HAPTIC_FEEDBACK
+        // Haptic feedback only for actual object presses.
+        // Object ID 0 is the page/background itself.
+        if(objid != 0 && strstr(data, "\"event\":\"down\"") != nullptr) {
+            jwg_haptic_click();
+        }
+#endif
+
         object_dispatch_state(pageid, objid, data);
     } else {
         LOG_ERROR(TAG_EVENT, F(D_OBJECT_UNKNOWN));
@@ -484,7 +498,8 @@ void generic_event_handler(lv_obj_t* obj, lv_event_t event)
             return;
 
         case LV_EVENT_PRESSED:
-            hasp_update_sleep_state(); // wakeup?
+ 
+	    hasp_update_sleep_state(); // wakeup?
             last_value_sent = HASP_EVENT_DOWN;
             break;
 
@@ -495,9 +510,11 @@ void generic_event_handler(lv_obj_t* obj, lv_event_t event)
                 last_value_sent = HASP_EVENT_LONG;
             return;
 
-        case LV_EVENT_SHORT_CLICKED:
-            if(last_value_sent != HASP_EVENT_LOST) last_value_sent = HASP_EVENT_UP; // Avoid SHORT + UP double events
-            break;
+	case LV_EVENT_SHORT_CLICKED:
+	    if(last_value_sent != HASP_EVENT_LOST) {
+	        last_value_sent = HASP_EVENT_UP;
+	    }
+	    break;
 
         case LV_EVENT_LONG_PRESSED:
             if(last_value_sent != HASP_EVENT_LOST) last_value_sent = HASP_EVENT_LONG;

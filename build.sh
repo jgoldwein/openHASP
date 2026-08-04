@@ -18,7 +18,7 @@ read -p 'MQTT Password: ' -e mqttpass
 NAME="$devid-plate$nodename-$devip"
 #
 echo "creating user_config_overide.h file from template"
-cat include/user_config_override-template.tpl | sed -e "s/%DEVIP%/${devip}/g" | sed -e "s/%DEVID%/${devid}/g" |  sed -e "s/%nodename%/${nodename}/g" |sed -e "s/%mqttserverip%/${mqttserverip}/g"  | sed -e "s/%pass1%/${pass1}/g"  | sed -e "s/%pass2%/${pass2}/g" | sed -e "s/%ssid1%/${ssid1}/g"  | sed -e "s/%ssid2%/${ssid2}/g" | sed -e "s/%startpage%/${startpage}/g" > include/user_config_override.h
+cat include/user_config_override-template.tpl | sed -e "s/%DEVIP%/${devip}/g" | sed -e "s/%DEVID%/${devid}/g" |  sed -e "s/%nodename%/${nodename}/g" | sed -e "s/%mqttserverip%/${mqttserverip}/g"  | sed -e "s/%mqttuser%/${mqttuser}/g" |sed -e "s/%mqttpass%/${mqttpass}/g" | sed -e "s/%pass1%/${pass1}/g"  | sed -e "s/%pass2%/${pass2}/g" | sed -e "s/%ssid1%/${ssid1}/g"  | sed -e "s/%ssid2%/${ssid2}/g" | sed -e "s/%startpage%/${startpage}/g" > include/user_config_override.h
 
 # FILENAME must be same as base file version in platformio_override.ini
 # 

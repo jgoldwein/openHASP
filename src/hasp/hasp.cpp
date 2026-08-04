@@ -131,11 +131,31 @@ lv_font_t* hasp_get_font(uint8_t fontid)
     }
 }
 
+static bool jwg_usb_power_present()
+{
+#if JWG_USB_POWER_SENSE
+    return digitalRead(JWG_USB_POWER_SENSE_PIN) == JWG_USB_POWER_PRESENT_LEVEL;
+#else
+    return false;
+#endif
+}
+
 /**
  * Check if sleep state needs to be updated
  */
 HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
 {
+
+#if JWG_USB_POWER_SENSE
+    static bool last_usb_state = false;
+    bool usb_state = jwg_usb_power_present();
+    if (usb_state != last_usb_state) {
+       last_usb_state = usb_state;
+       LOG_INFO(TAG_HASP,
+                F("JWG USB power %s"),
+                usb_state ? "CONNECTED" : "DISCONNECTED");
+    }
+#endif
 
 #if JWG_MOTION_SENSOR
 
@@ -190,12 +210,12 @@ HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
            dispatch_idle_state(HASP_SLEEP_OFF);
        }
     }
-
 #if defined(ARDUINO_ARCH_ESP32) && JWG_DEEP_SLEEP_MODE
-    if(idle >= JWG_DEEP_SLEEP_AFTER_SEC) {
-       jwg_enter_deep_sleep();
-    }
-#endif 
+      if(idle >= JWG_DEEP_SLEEP_AFTER_SEC &&
+         !(JWG_PREVENT_SLEEP_ON_USB && jwg_usb_power_present())) {
+          jwg_enter_deep_sleep();
+      }
+#endif
 }
 
 #if defined(ARDUINO_ARCH_ESP32)
@@ -670,6 +690,10 @@ void hasp_set_theme(uint8_t themeid)
  */
 void haspSetup(void)
 {
+#if JWG_USB_POWER_SENSE
+    pinMode(JWG_USB_POWER_SENSE_PIN, INPUT);
+#endif
+
 #if JWG_HIDE_BOOT_UNTIL_ONLINE
     haspDevice.set_backlight_level(0);
     haspDevice.set_backlight_power(false);

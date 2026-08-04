@@ -8,6 +8,15 @@ The upstream project changelog remains in CHANGELOG.md.
 
 ## Unreleased
 
+
+### Added Aug 4, 2026
+- USB power sensing for charger detection.
+- Haptic feedback framework.
+- Touchscreen haptic feedback for object presses.
+- Haptic feedback for page navigation.
+- Haptic feedback for physical GPIO buttons.
+- Non-blocking haptic driver infrastructure.
+
 ### Added
 
 - Configurable default start page via build.sh

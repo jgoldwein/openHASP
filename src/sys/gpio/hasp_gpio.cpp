@@ -4,6 +4,8 @@
 #include "lv_conf.h" // For timing defines
 
 #include "hasplib.h"
+#include "jwg_features.h"
+#include "jwg_haptic.h"
 
 #include "hasp_gpio.h"
 
@@ -126,15 +128,22 @@ static void gpio_event_handler(AceButton* button, uint8_t eventType, uint8_t but
     hasp_event_t eventid;
     bool state = false;
     switch(eventType) {
-        case AceButton::kEventPressed:
-            if(gpioConfig[btnid].type != hasp_gpio_type_t::BUTTON_TYPE) {
-                eventid = HASP_EVENT_ON;
-            } else {
-                eventid = HASP_EVENT_DOWN;
-            }
-            state = true;
-            // touchdetected = false;
-            break;
+
+	case AceButton::kEventPressed:
+	#if JWG_HAPTIC_FEEDBACK
+    	    jwg_haptic_click();
+	#endif
+
+	    if(gpioConfig[btnid].type != hasp_gpio_type_t::BUTTON_TYPE) {
+	        eventid = HASP_EVENT_ON;
+	    } else {
+	        eventid = HASP_EVENT_DOWN;
+	    }
+
+	    state = true;
+	    // touchdetected = false;
+  	    break;
+
         case 2: // AceButton::kEventClicked:
             eventid = HASP_EVENT_UP;
             break;

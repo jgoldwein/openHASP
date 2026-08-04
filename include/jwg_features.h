@@ -13,9 +13,11 @@
 // Hardware - Haptic Feedback
 #define JWG_HAPTIC_FEEDBACK       	1
 #define JWG_HAPTIC_PIN            	3  	// GPIO3 
-#define JWG_HAPTIC_CLICK_MS       	15
-#define JWG_HAPTIC_LONG_MS              40
+#define JWG_HAPTIC_CLICK_MS       	35
+#define JWG_HAPTIC_LONG_MS              55
 #define JWG_HAPTIC_PAUSE_MS             50
+#define JWG_HAPTIC_ACTIVE_LEVEL         HIGH
+
 
 // Fast Boot
 #define JWG_FAST_BOOT			1
@@ -36,6 +38,14 @@
 #define JWG_BRIGHT_ACTIVE              255
 #define JWG_BRIGHT_SHORT               40
 #define JWG_BRIGHT_LONG                1
+
+
+// USB Power Detection
+#define JWG_USB_POWER_SENSE              1
+#define JWG_USB_POWER_SENSE_PIN          2
+#define JWG_USB_POWER_PRESENT_LEVEL      HIGH
+#define JWG_PREVENT_SLEEP_ON_USB         1
+//
 
 // Idle Timers (seconds)
 #define JWG_IDLE_SHORT_SEC         	10

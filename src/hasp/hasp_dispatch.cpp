@@ -6,6 +6,9 @@
 
 // #include "ArduinoLog.h"
 #include "hasplib.h"
+#include "jwg_haptic.h"
+#include "jwg_features.h"
+
 
 #include "dev/device.h"
 #include "drv/tft/tft_driver.h"
@@ -24,6 +27,8 @@
 #include <mutex>
 #include <string>
 #include "../mqtt/hasp_mqtt.h"
+
+
 
 /* Deferred command queue: MQTT callback runs on Paho thread; jsonl/json handlers call LVGL
  * (hasp_new_object) which is not thread-safe. Queue jsonl/json for processing on main thread.
@@ -1036,6 +1041,14 @@ void dispatch_set_page(uint8_t pageid, lv_scr_load_anim_t animation, uint32_t ti
 
 void dispatch_page(const char*, const char* payload, uint8_t source)
 {
+#if JWG_HAPTIC_FEEDBACK
+    if(payload &&
+       (!strcmp(payload, "next") ||
+        !strcmp(payload, "prev") ||
+        !strcmp(payload, "back"))) {
+        jwg_haptic_click();
+    }
+#endif
     if(!payload || strlen(payload) == 0) {
         dispatch_current_page(); // No payload, send current page
         return;

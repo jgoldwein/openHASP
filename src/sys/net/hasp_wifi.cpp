@@ -455,7 +455,7 @@ static void wifiReconnect(void)
     else
         WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
 #else
-    IPAddress ip(10, 1, 1, 184);
+    IPAddress ip(10, 1, 1, 54);
     IPAddress net(255, 255, 255, 0);
     IPAddress gw(10, 1, 1, 1);
     IPAddress dns1(10, 1, 1, 1);

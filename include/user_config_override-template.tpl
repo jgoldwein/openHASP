@@ -143,7 +143,7 @@
 //#define HASP_GPIO_TEMPLATE "[197658,263456,329249,655628,655886,656155,0,0]"  // Lanbon L8 3-gang GPIO config
 //#define HASP_GPIO_TEMPLATE "[3214348,197658,263456,329249,94699520,0,0,0]" // Lanbon L8 Dimmer GPIO config
 //#define HASP_GPIO_TEMPLATE "[2147680277,2147745814,2147811332,44826637,20,0,0,0]" // HAWP1P1 4-i_blue,21-i_red,22-i_green
- 
+#define HASP_GPIO_TEMPLATE "[49283111,49283112,49283113,49283114,0,0,0,0]"  // HARC5P0 JWG 
 /***************************************************
  *        Other Settings
  **************************************************/

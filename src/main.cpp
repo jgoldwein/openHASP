@@ -17,6 +17,7 @@
 #include "sys/net/hasp_time.h"
 #include "dev/device.h"
 #include "jwg_wifi_led.h"
+#include "jwg_haptic.h"
 
 #if HASP_USE_CONFIG > 0
 #include "hasp_debug.h"
@@ -167,6 +168,7 @@ IRAM_ATTR void loop()
 {
 //  JWG
     jwg_wifi_led_loop();
+    jwg_haptic_loop();
 
 #if defined(ESP32) && defined(HASP_USE_ESP_MQTT)
     if(!gui_acquire(portMAX_DELAY)) {
