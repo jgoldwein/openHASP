@@ -4,6 +4,7 @@
 ## Project files ######
 .git
 .pio
+jwgBuild.sh
 bin/*
 data/*
 !data/edit.htm

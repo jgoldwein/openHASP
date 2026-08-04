@@ -15,7 +15,7 @@
 #define JWG_HAPTIC_PIN            	3  	// GPIO3 
 #define JWG_HAPTIC_CLICK_MS       	35
 #define JWG_HAPTIC_LONG_MS              55
-#define JWG_HAPTIC_PAUSE_MS             50
+#define JWG_HAPTIC_PAUSE_MS             80
 #define JWG_HAPTIC_ACTIVE_LEVEL         HIGH
 
 

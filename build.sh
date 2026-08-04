@@ -3,17 +3,17 @@
 #  For openHASP ESP32-S3 based devices
 # 
 
-read -p 'Device ID: ' -i 'HARC1P0' -e devid
+read -p 'Device ID: ' -i 'HARC5P0' -e devid
 read -p 'IP of device: 10.1.1.' -i '54' -e devip
-read -p 'Node name: plate' -i '22' -e nodename
+read -p 'Node name: plate' -i '23' -e nodename
 read -p 'Default start (home) page: ' -i '1' -e startpage
 read -p 'MQTT Server IP address (32/182): 10.1.1.' -i '32' -e mqttserverip
 read -p 'SSID 1: ' -e ssid1
 read -p 'Password 1: ' -e pass1
 read -p 'SSID 2: ' -e ssid2
-read -p 'Password 2: ' -e pass2
-read -p 'MQTT Username: ' -e mqttuser
-read -p 'MQTT Password: ' -e mqttpass
+read -p 'Password 2: '  -e pass2
+read -p 'MQTT Username: '  -e mqttuser
+read -p 'MQTT Password: '  -e mqttpass
 
 NAME="$devid-plate$nodename-$devip"
 #

@@ -145,15 +145,29 @@ static bool jwg_usb_power_present()
  */
 HASP_ATTRIBUTE_FAST_MEM void hasp_update_sleep_state()
 {
-
 #if JWG_USB_POWER_SENSE
-    static bool last_usb_state = false;
+    static bool usb_state_initialized = false;
+    static bool last_usb_state        = false;
+
     bool usb_state = jwg_usb_power_present();
-    if (usb_state != last_usb_state) {
-       last_usb_state = usb_state;
-       LOG_INFO(TAG_HASP,
-                F("JWG USB power %s"),
-                usb_state ? "CONNECTED" : "DISCONNECTED");
+
+    if(!usb_state_initialized) {
+        last_usb_state        = usb_state;
+        usb_state_initialized = true;
+    } else if(usb_state != last_usb_state) {
+        last_usb_state = usb_state;
+
+        LOG_INFO(TAG_HASP,
+                 F("JWG USB power %s"),
+                 usb_state ? "CONNECTED" : "DISCONNECTED");
+
+    #if JWG_HAPTIC_FEEDBACK
+        if(usb_state) {
+            jwg_haptic_double();
+        } else {
+            jwg_haptic_click();
+        }
+    #endif
     }
 #endif
 

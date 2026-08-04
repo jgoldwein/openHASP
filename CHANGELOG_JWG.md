@@ -9,6 +9,20 @@ The upstream project changelog remains in CHANGELOG.md.
 ## Unreleased
 
 
+### Added AUG 4, 2026 PM
+- USB power sensing on GPIO2.
+- Prevention of deep sleep while USB power is present.
+- Haptic feedback driver on GPIO3.
+- Haptic feedback for touchscreen object presses.
+- Haptic feedback for page navigation controls.
+- Haptic feedback for physical GPIO buttons.
+- Two-pulse notification when USB power is connected.
+- Single-pulse notification when USB power is disconnected.
+
+### Changed
+- Increased haptic click duration for more reliable tactile feedback.
+- Added `jwgBuild.sh` to `.gitignore`.
+
 ### Added Aug 4, 2026
 - USB power sensing for charger detection.
 - Haptic feedback framework.

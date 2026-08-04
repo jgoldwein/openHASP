@@ -43,13 +43,23 @@ void jwg_haptic_long()
 {
     jwg_haptic_start(JWG_HAPTIC_LONG_MS);
 }
-
 void jwg_haptic_double()
 {
-   // Placeholder for now
-    jwg_haptic_start(JWG_HAPTIC_CLICK_MS);
-}
+    pinMode(JWG_HAPTIC_PIN, OUTPUT);
 
+    digitalWrite(JWG_HAPTIC_PIN, JWG_HAPTIC_ACTIVE_LEVEL);
+    delay(JWG_HAPTIC_CLICK_MS);
+
+    digitalWrite(JWG_HAPTIC_PIN, !JWG_HAPTIC_ACTIVE_LEVEL);
+    delay(JWG_HAPTIC_PAUSE_MS);
+
+    digitalWrite(JWG_HAPTIC_PIN, JWG_HAPTIC_ACTIVE_LEVEL);
+    delay(JWG_HAPTIC_CLICK_MS);
+
+    digitalWrite(JWG_HAPTIC_PIN, !JWG_HAPTIC_ACTIVE_LEVEL);
+
+    haptic_active = false;
+}
 #else
 
 void jwg_haptic_init() {}
