@@ -9,7 +9,10 @@ The upstream project changelog remains in CHANGELOG.md.
 ## Unreleased
 
 
-### Added AUG 4, 2026 PM
+### Added Aug 5, 2026
+- Wake-from-deep-sleep haptic notification.
+
+### Added Aug 4, 2026 PM
 - USB power sensing on GPIO2.
 - Prevention of deep sleep while USB power is present.
 - Haptic feedback driver on GPIO3.

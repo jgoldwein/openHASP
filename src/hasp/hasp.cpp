@@ -717,6 +717,11 @@ void haspSetup(void)
     // JWG
     jwg_wifi_led_init();
     jwg_haptic_init();
+    #if defined(ARDUINO_ARCH_ESP32) && JWG_HAPTIC_FEEDBACK
+        if(esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_UNDEFINED) {
+            jwg_haptic_click();
+    }
+    #endif
     /******* File System Test ********************************************************************/
     // lv_fs_file_t f;
     // lv_fs_res_t res;
