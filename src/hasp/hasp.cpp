@@ -719,7 +719,7 @@ void haspSetup(void)
     jwg_haptic_init();
     #if defined(ARDUINO_ARCH_ESP32) && JWG_HAPTIC_FEEDBACK
         if(esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_UNDEFINED) {
-            jwg_haptic_click();
+            jwg_haptic_blip();
     }
     #endif
     /******* File System Test ********************************************************************/

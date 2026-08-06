@@ -8,6 +8,8 @@ The upstream project changelog remains in CHANGELOG.md.
 
 ## Unreleased
 
+### Added Aug 6, 2026
+- Added haptic_blip() which is 1/2 times haptic_click and applied it to wake up
 
 ### Added Aug 5, 2026
 - Wake-from-deep-sleep haptic notification.
