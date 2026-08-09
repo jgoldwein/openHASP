@@ -112,6 +112,7 @@ static lv_font_t* haspFonts[12] = {nullptr};
 uint8_t current_page            = 1;
 
 // JWG
+
 #if JWG_MOTION_SENSOR
 void IRAM_ATTR motion_isr()
 {
@@ -717,11 +718,7 @@ void haspSetup(void)
     // JWG
     jwg_wifi_led_init();
     jwg_haptic_init();
-    #if defined(ARDUINO_ARCH_ESP32) && JWG_HAPTIC_FEEDBACK
-        if(esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_UNDEFINED) {
-            jwg_haptic_blip();
-    }
-    #endif
+
     /******* File System Test ********************************************************************/
     // lv_fs_file_t f;
     // lv_fs_res_t res;

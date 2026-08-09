@@ -18,6 +18,7 @@
 #include "dev/device.h"
 #include "jwg_wifi_led.h"
 #include "jwg_haptic.h"
+#include "jwg_features.h"
 
 #if HASP_USE_CONFIG > 0
 #include "hasp_debug.h"
@@ -38,7 +39,11 @@ uint16_t statLoopCounter = 0; // measures the average looptime
 
 void setup()
 {
-    //   hal_setup();
+#if defined(ARDUINO_ARCH_ESP32) && JWG_HAPTIC_FEEDBACK
+    bool jwg_woke_from_deep_sleep =
+        (esp_sleep_get_wakeup_cause() != ESP_SLEEP_WAKEUP_UNDEFINED);
+#endif
+	//   hal_setup();
 
 #if HASP_TARGET_ARDUINO
     esp_log_level_set("*", ESP_LOG_NONE); // set all components to ERROR level
@@ -96,6 +101,11 @@ void setup()
 #endif
     if(!oobe) {
         haspSetup();
+    #if defined(ARDUINO_ARCH_ESP32) && JWG_HAPTIC_FEEDBACK
+	if(jwg_woke_from_deep_sleep) {
+            jwg_haptic_blip();
+        }
+    #endif
     }
 
     /****************************

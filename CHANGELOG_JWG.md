@@ -8,6 +8,12 @@ The upstream project changelog remains in CHANGELOG.md.
 
 ## Unreleased
 
+### Added Aug 9, 2026
+- Added short haptic feedback immediately after waking from deep sleep.
+- Added `jwg_haptic_blip()` for a shorter wake indication.
+- Added `jwg_features.h` to `main.cpp` so JWG feature flags are available during startup.
+- Removed earlier/duplicate deep-sleep haptic handling from `haspSetup()`.
+
 ### Added Aug 6, 2026
 - Added haptic_blip() which is 1/2 times haptic_click and applied it to wake up
 

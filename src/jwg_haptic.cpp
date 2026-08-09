@@ -32,17 +32,19 @@ void jwg_haptic_loop()
         haptic_active = false;
     }
 }
-
-
 void jwg_haptic_blip()
+
 {
     pinMode(JWG_HAPTIC_PIN, OUTPUT);
+    digitalWrite(JWG_HAPTIC_PIN, !JWG_HAPTIC_ACTIVE_LEVEL);
+
+    delay(40);  // allow haptic hardware/power to stabilize after deep-sleep wake
 
     digitalWrite(JWG_HAPTIC_PIN, JWG_HAPTIC_ACTIVE_LEVEL);
-    delay(JWG_HAPTIC_CLICK_MS/2);
+    delay(25);
     digitalWrite(JWG_HAPTIC_PIN, !JWG_HAPTIC_ACTIVE_LEVEL);
-    
-    haptic_active = false;    
+
+    haptic_active = false;
 }
 
 
