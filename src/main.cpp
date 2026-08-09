@@ -103,7 +103,7 @@ void setup()
         haspSetup();
     #if defined(ARDUINO_ARCH_ESP32) && JWG_HAPTIC_FEEDBACK
 	if(jwg_woke_from_deep_sleep) {
-            jwg_haptic_blip();
+            jwg_haptic_double();
         }
     #endif
     }
