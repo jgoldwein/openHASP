@@ -9,6 +9,10 @@ The upstream project changelog remains in CHANGELOG.md.
 ## Unreleased
 
 ### Added Aug 9, 2026
+
+- Added `hasp_trigger_activity()` helper to reset LVGL inactivity and sleep offset on physical GPIO button presses.
+- Physical buttons now reset the display idle timer, matching touchscreen and motion activity.
+
 - Added distinctive double haptic feedback immediately after waking from deep sleep.
 - Added `jwg_haptic_blip()` for a shorter wake indication for future use.
 - Added `jwg_features.h` to `main.cpp` so JWG feature flags are available during startup.

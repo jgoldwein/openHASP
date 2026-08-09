@@ -133,11 +133,11 @@ static void gpio_event_handler(AceButton* button, uint8_t eventType, uint8_t but
 	#if JWG_HAPTIC_FEEDBACK
     	    jwg_haptic_click();
 	#endif
-
 	    if(gpioConfig[btnid].type != hasp_gpio_type_t::BUTTON_TYPE) {
 	        eventid = HASP_EVENT_ON;
 	    } else {
 	        eventid = HASP_EVENT_DOWN;
+		hasp_trigger_activity();
 	    }
 
 	    state = true;

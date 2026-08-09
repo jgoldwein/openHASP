@@ -84,6 +84,7 @@ void hasp_set_sleep_state(uint8_t state);
 void hasp_get_sleep_time(uint16_t& short_time, uint16_t& long_time);
 void hasp_set_sleep_time(uint16_t short_time, uint16_t long_time);
 void hasp_set_sleep_offset(uint32_t offset);
+void hasp_trigger_activity();
 void hasp_set_wakeup_touch(bool en);
 void hasp_set_antiburn(int32_t repeat_count, uint32_t period);
 bool hasp_stop_antiburn();

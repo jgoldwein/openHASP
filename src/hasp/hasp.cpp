@@ -141,6 +141,14 @@ static bool jwg_usb_power_present()
 #endif
 }
 
+
+void hasp_trigger_activity()
+{
+    lv_disp_trig_activity(NULL);
+    sleepTimeOffset = 0;
+    hasp_update_sleep_state();
+}
+
 /**
  * Check if sleep state needs to be updated
  */
